@@ -1,0 +1,27 @@
+Requerimientos:
+
+1.	Cuantas películas existen por cada uno de los géneros. Incluir en el resultado el título de la película y el nombre del género.
+2.	Quien es el actor (nombre) con más películas
+3.	Cual es la película (título) con más actores
+4.	Cual es el director (nombre) con mas películas
+5.	Los nombres de las películas en las que el director actua
+6.	Cual es la película (título) con mayor cantidad de calificaciones
+7.	Cual es la película (título) con mayor promedio de calificación (rating)
+
+Soluciones:
+
+1.1. (peliculas por genero) SELECT id_gen, COUNT(DISTINCT id_peli) as np FROM peli_genero GROUP BY id_gen;
+
+1.2. (titulo,genero ordenado por genero) SELECT name_peli,genero FROM pelis,generos GROUP BY genero,name_peli;
+
+2. SELECT name_ind FROM individuos WHERE id_ind=(SELECT id_ind FROM (SELECT id_ind, COUNT(DISTINCT id_cred) as np FROM acteres GROUP BY id_ind ORDER BY np DESC LIMIT 1) T);
+
+3. SELECT name_peli FROM pelis WHERE id_peli=(SELECT id_peli FROM (SELECT id_peli, COUNT(DISTINCT id_ind) as np FROM acteres GROUP BY id_peli ORDER BY np DESC LIMIT 1) T);
+
+4. SELECT name_ind FROM individuos WHERE id_ind=(SELECT id_ind FROM (SELECT id_ind, COUNT(DISTINCT id_peli) as np FROM produccion GROUP BY id_ind ORDER BY np DESC LIMIT 1) T);
+
+5. SELECT DISTINCT name_peli FROM pelis,produccion,acteres WHERE pelis.id_peli=produccion.id_peli AND produccion.puesto_pr='Director' AND produccion.id_ind=acteres.id_ind;
+
+6. SELECT name_peli FROM pelis WHERE countv=(SELECT MAX(countv) FROM pelis);
+
+7. SELECT name_peli FROM pelis WHERE prom=(SELECT MAX(prom) FROM pelis);
